@@ -1,0 +1,197 @@
+# ==========================================================
+#                    VITYARTHI PROJECT
+#                       SUDOKU GAME
+# ==========================================================
+
+sudoku=[[0,0,5,0,4,2,0,0,0],[0,0,7,5,0,9,0,0,2],[0,4,0,0,0,8,0,0,5],[0,6,0,0,0,0,0,2,9],[2,3,0,0,0,0,0,8,7],[7,9,0,0,0,0,0,6,0],[8,0,0,4,0,0,0,5,0],[0,0,0,7,0,6,2,0,0],[0,0,0,1,8,0,7,0,0]]
+
+# Correct answer of the Sudoku
+
+answer=[[9,1,5,3,4,2,8,7,6],[6,8,7,5,1,9,4,3,2],[3,4,2,6,7,8,9,1,5],[5,6,4,8,3,7,1,2,9],[2,3,1,9,6,4,5,8,7],[7,9,8,2,5,1,3,6,4],[8,7,9,4,2,3,6,5,1],[1,5,3,7,9,6,2,4,8],[4,2,6,1,8,5,7,9,3]]
+
+board=[]
+for i in sudoku:
+    board.append(i.copy())
+
+# ----------------------------------------------------------
+# Function to display the Sudoku board
+# ----------------------------------------------------------
+
+def display_board():
+    print("\n")
+    print("       SUDOKU")
+    print("-------------------------")
+    for i in range(9):
+        if i==3 or i==6:
+            print("-------------------------")
+        for j in range(9):
+            if j==3 or j==6:
+                print("|",end=" ")
+            if board[i][j]==0:
+                print(".",end=" ")
+            else:
+                print(board[i][j],end=" ")
+        print()
+    print("-------------------------")
+
+# ----------------------------------------------------------
+# Function to check whether the Sudoku is completed
+# ----------------------------------------------------------
+
+def check_complete():
+    for i in range(9):
+        for j in range(9):
+            if board[i][j]!=answer[i][j]:
+                return False
+    return True
+
+# ----------------------------------------------------------
+# Function to count empty cells
+# ----------------------------------------------------------
+
+def empty_cells():
+    count=0
+    for i in range(9):
+        for j in range(9):
+            if board[i][j]==0:
+                count+=1
+    return count
+
+# ----------------------------------------------------------
+# Function to give a hint
+# ----------------------------------------------------------
+
+def give_hint():
+    for i in range(9):
+        for j in range(9):
+            if board[i][j]==0:
+                board[i][j]=answer[i][j]
+                print("\nHint given!")
+                print("Row:",i+1)
+                print("Column:",j+1)
+                print("Number:",answer[i][j])
+                return
+    print("\nThere are no empty cells.")
+
+# ----------------------------------------------------------
+# Function to play the game
+# ----------------------------------------------------------
+
+def play_game():
+    mistakes=0
+    while True:
+        display_board()
+        print("\nEmpty cells:",empty_cells())
+        print("Mistakes:",mistakes)
+
+        # Check if game is completed
+        if check_complete():
+            print("\n================================")
+            print("       CONGRATULATIONS!")
+            print("       SUDOKU SOLVED!")
+            print("================================")
+            break
+        print("\nEnter H for a hint")
+        print("Enter Q to quit")
+        try:
+            row_input=input("\nEnter row (1-9):")
+
+            # Quit game
+            if row_input.upper() == "Q":
+                print("\nYou quit the game.")
+                break
+
+            # Hint
+            if row_input.upper()=="H":
+                give_hint()
+                continue
+            row = int(row_input)
+            col = int(input("Enter column (1-9):"))
+            number = int(input("Enter number (1-9):"))
+
+            # Check row
+            if row<1 or row>9:
+                print("\nInvalid row!")
+                continue
+
+            # Check column
+            if col<1 or col>9:
+                print("\nInvalid column!")
+                continue
+
+            # Check number
+            if number<1 or number>9:
+                print("\nNumber must be between 1 and 9!")
+                continue
+
+            # Convert to list index
+            row=row-1
+            col=col-1
+
+            # Check if cell was originally filled
+            if sudoku[row][col]!=0:
+                print("\nYou cannot change this number!")
+                continue
+
+            # Check answer
+
+            if number==answer[row][col]:
+                board[row][col]=number
+                print("\nCorrect! ✓")
+            else:
+                mistakes=mistakes+1
+                print("\nWrong answer! ✗")
+                print("Try again.")
+        except ValueError:
+            print("\nPlease enter numbers only!")
+
+# ----------------------------------------------------------
+# Instructions
+# ----------------------------------------------------------
+
+def show_instructions():
+    print("\n========================================")
+    print("             HOW TO PLAY")
+    print("========================================")
+    print("1. Sudoku has a 9 x 9 grid.")
+    print("2. Some numbers are already given.")
+    print("3. Fill all the empty cells.")
+    print("4. Enter row, column and number.")
+    print("5. Correct numbers are accepted.")
+    print("6. Wrong numbers increase your mistakes.")
+    print("7. You can use H to get a hint.")
+    print("8. You can use Q to quit.")
+    print("========================================")
+
+# ----------------------------------------------------------
+# Main Menu
+# ----------------------------------------------------------
+
+def main():
+    while True:
+        print("\n")
+        print("========================================")
+        print("             SUDOKU GAME")
+        print("========================================")
+        print("1. Start Game")
+        print("2. Instructions")
+        print("3. Exit")
+        print("========================================")
+        choice=input("Enter your choice: ")
+        if choice=="1":
+            play_game()
+        elif choice=="2":
+            show_instructions()
+        elif choice=="3":
+            print("\nThank you for playing!")
+            print("Goodbye!")
+            break
+        else:
+            print("\nInvalid choice!")
+            print("Please choose 1, 2 or 3.")
+
+# ----------------------------------------------------------
+# Start the program
+# ----------------------------------------------------------
+
+main()
